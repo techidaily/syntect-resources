@@ -1,0 +1,18 @@
+*.cache
+*.pyc
+
+# Editor files.
+*.sublime-workspace
+
+# Required on Windows to tell the build script where to copy files.
+# Must include a "pathToData" key.
+package-dev.json
+bin/deployment_tool/**/packages
+dist/
+
+# Development/temporary files.
+*.YAML-tmLanguage
+
+# Dart
+**/.pub
+bin/deployment_tool/.packages

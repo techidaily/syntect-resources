@@ -106,7 +106,8 @@ int main() {
 // constructor.
 FOOLIB_RESULT
 some_namespace::some_function(int a_parameter, double another_parameter) {
-  /* <- meta.function entity.name.function - entity.name.function.constructor */
+  /* <- meta.function meta.toc-list.full-identifier */
+  /*            ^ entity.name.function - entity.name.function.constructor */
   return FOOLIB_SUCCESS;
 }
 
@@ -389,6 +390,51 @@ typedef struct Books {
 } Book;
 /*^ entity.name.type */
 
+using Alias = Foo;
+/* <- keyword.control */
+/*    ^^^^^ entity.name.type.using */
+
+using Alias
+  = NewLineFoo;
+/*^ - entity.name */ 
+
+template <typename T>
+using TemplateAlias = Foo<T>;
+/*    ^^^^^^^^^^^^^ entity.name.type.using */
+
+using std::cout;
+/* <- keyword.control */
+/*    ^ - entity.name */
+
+using std::
+  cout;
+/*^ - entity.name */
+
+class MyClass : public SuperClass
+{
+    using This = MyClass;
+/*  ^ keyword.control */
+/*        ^^^^ entity.name.type.using */
+
+    using MyInt
+/*  ^ keyword.control */
+        = int32_t;
+
+    using SuperClass::SuperClass;
+/*  ^ keyword.control */
+/*        ^ - entity.name */
+};
+
+class MyClass : public CrtpClass<MyClass>
+{
+    using typename CrtpClass<MyClass>::PointerType;
+/*  ^ keyword.control */
+/*        ^ storage.modifier */ 
+    using CrtpClass<
+/*  ^ keyword.control */
+        MyClass>::method;
+};
+
 typedef struct Books Book;
 /*             ^ - entity.name.type.struct */
 /*                   ^ entity.name.type.typedef */
@@ -446,25 +492,45 @@ void funcName<C>() {
 }
 bool A::operator<(const A& a) { return false; }
 /* ^ storage.type */
-/*   ^^^^^^^^^^^^ meta.function entity.name.function */
+/*   ^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*      ^^^^^^^^^ entity.name.function */
 /*               ^ meta.function.parameters punctuation.section.group.begin */
 template <class T> bool A<T>::operator<(const A& a) { return false; }
 /*     ^ storage.type.template */
 /*       ^ punctuation.section.generic.begin */
 /*               ^ punctuation.section.generic.end */
-/*                      ^^^^^^^^^^^^^^^ meta.function entity.name.function */
+/*                      ^^^^^^^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*                            ^^^^^^^^^ entity.name.function */
 /*                                     ^ meta.function.parameters meta.group punctuation.section.group.begin */
 template <typename Foo>
 SomeType<OtherType> A<Foo>::foobar(YetAnotherType&& asRValue) {}
-/*                          ^^^^^^ meta.function entity.name.function */
+/*                  ^^^^^^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*                          ^^^^^^ entity.name.function */
 template <typename Foo> SomeType<OtherType> A<Foo>::foobar(YetAnotherType&& asRValue) {}
-/*                                                  ^^^^^^ meta.function entity.name.function */
+/*                                          ^^^^^^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*                                                  ^^^^^^ entity.name.function */
+
+template <typename Foo> A<Foo>::A(YetAnotherType&& asRValue) {}
+/*                      ^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*                              ^ entity.name.function */
+
+template <typename Foo> A<Foo>::A(YetAnotherType&& asRValue) {}
+/*                      ^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*                              ^ entity.name.function.constructor */
+
+template <typename Foo> A<Foo>::~A(YetAnotherType&& asRValue) {}
+/*                      ^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*                              ^ entity.name.function.destructor */
+
 template <class T>
 bool A<T>::operator   >    (const A& other) { return false; }
-/*         ^^^^^^^^^^^^ meta.function entity.name.function */
+/*   ^^^^^^^^^^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*         ^^^^^^^^^^^^ entity.name.function */
 template <class T>
 bool A<T>::operator    ==    (const A& other) { return false; }
-/*         ^^^^^^^^^^^^^^ meta.function entity.name.function */
+/*   ^^^^^^^^^^^^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*         ^^^^^^^^^^^^^^ entity.name.function */
+
 typedef std :: vector<std::vector<int> > Table;
 /*          ^^ punctuation.accessor */
 /*                   ^ punctuation.section.generic.begin */
@@ -478,7 +544,7 @@ template <typename T = float, int a = 3, bool b = true>
                   /*                  ^ meta.template constant.numeric              */
                   /*                            ^ meta.template keyword.operator    */
                   /*                              ^ meta.template constant.language */
-struct Foo 
+struct Foo
 {
 
 /* <- meta.struct - meta.template */
@@ -515,7 +581,7 @@ template<class T, class U = T> class B { /* ... */ };
 /*                            ^ - meta.template            */
 template <class ...Types> class C { /* ... */ };
 
-// templates inside templates... it's templates all the way down 
+// templates inside templates... it's templates all the way down
 template<template<class> class P> class X { /* ... */ };
 /*      ^ meta.template punctuation                              */
 /*               ^ meta.template meta.template punctuation       */
@@ -615,7 +681,7 @@ int main() {
 
 // Example from section 14.2/4 of
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3690.pdf
-struct X 
+struct X
 {
     template <std::size_t>
     X* alloc();
@@ -623,12 +689,12 @@ struct X
     template <std::size_t>
     static X* adjust();
 };
-template <class T> 
-void f(T* p) 
+template <class T>
+void f(T* p)
 {
     // Be optimistic: scope it as a template member function call anyway.
     T* p1 = p->alloc<200>(); // ill-formed: < means less than
-    
+
     T* p2 = p->template alloc<200>(); // OK: < starts template argument list
     /*        ^ punctuation.accessor           */
     /*         ^ storage.type - variable.other */
@@ -636,7 +702,7 @@ void f(T* p)
 
     // Be optimistic: scope it as a template member function call anyway.
     T::adjust<100>(); // ill-formed: < means less than
-    
+
     T::template adjust<100>(); // OK: < starts template argument list
     /* <- - variable.function                    */
     /*^ punctuation.accessor                     */
@@ -674,15 +740,15 @@ void f()
 template<typename T> C<T> f(T t)
 {
     return C<T> { g<X<T>>(t) };
-    /*     ^ - variable.function */
-    /*          ^ punctuation.section.block.begin */
+    /*     ^ variable.function */
+    /*          ^ punctuation.section.group.begin */
 }
 
 template<typename T> C<X<T>> f(T t)
 {
     return C<X<T>> { g<X<T>>(t) };
-    /*     ^ - variable.function */
-    /*             ^ punctuation.section.block.begin */
+    /*     ^ variable.function */
+    /*             ^ punctuation.section.group.begin */
 }
 
 struct A { int foo; };
@@ -805,7 +871,7 @@ try
 {
     throw std :: string("xyz");
     /* <- keyword.control.flow.throw */
-    /*    ^^^^^^^^^^^^^ variable.function */
+    /*           ^^^^^^ variable.function */
     /*        ^^ punctuation.accessor */
 }
 catch (...)
@@ -1152,7 +1218,8 @@ static const uint32_t * const MACRO funcname();
 
 void FooBar :: baz(int a)
 /*   ^^^^^^^^^^^^^^^^^^^^ meta.function */
-/*   ^^^^^^^^^^^^^ entity.name.function */
+/*   ^^^^^^^^^^^^^ meta.toc-list.full-identifier */
+/*             ^^^ entity.name.function */
 /*          ^^ punctuation.accessor */
 /*                ^^^^^^^ meta.function.parameters meta.group */
 /*                ^ punctuation.section.group.begin */
@@ -1162,7 +1229,8 @@ void FooBar :: baz(int a)
 }
 /* A comment. */ void FooBar :: baz(int a)
 /*                    ^^^^^^^^^^^^^^^^^^^^ meta.function */
-/*                    ^^^^^^^^^^^^^ entity.name.function */
+/*                    ^^^^^^^^^^^^^ meta.toc-list.full-identifier */
+/*                              ^^^ entity.name.function */
 /*                           ^^ punctuation.accessor */
 /*                                 ^^^^^^^ meta.function.parameters meta.group */
 /*                                 ^ punctuation.section.group.begin */
@@ -1172,13 +1240,15 @@ void FooBar :: baz(int a)
 }
 // prevent leading comment from function recognition
 /**/ HRESULT A::b()
-/*           ^ meta.function entity.name.function */
+/*           ^ meta.function */
+/*              ^ entity.name.function */
 {
     return S_OK;
 }
 FooBar::FooBar(int a)
 /*^^^^^^^^^^^^^^^^^^^ meta.function */
-/*^^^^^^^^^^^^ entity.name.function */
+/*^^^^^^^^^^^^ meta.toc-list.full-identifier */
+/*      ^^^^^^ entity.name.function */
 /*            ^^^^^^^ meta.function.parameters meta.group */
 /*            ^ punctuation.section.group.begin */
 /*             ^^^ storage.type */
@@ -1188,7 +1258,8 @@ FooBar::FooBar(int a)
 
 FooBar :: FooBar(int a) & =
 /*^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
-/*^^^^^^^^^^^^^^ entity.name.function */
+/*^^^^^^^^^^^^^^ meta.toc-list.full-identifier */
+/*        ^^^^^^ entity.name.function */
 /*              ^^^^^^^ meta.function.parameters meta.group */
 /*              ^ punctuation.section.group.begin */
 /*               ^^^ storage.type */
@@ -1200,7 +1271,8 @@ default;
 /*^^^^^ meta.function storage.modifier */
 
 FooBar::~FooBar
-/*^^^^^^^^^^^^^ meta.function entity.name.function */
+/*^^^^^^^^^^^^^ meta.function meta.toc-list.full-identifier */
+/*      ^^^^^^^ entity.name.function */
 () { }
 /* <- meta.function.parameters meta.group punctuation.section.group.begin */
  /* <- meta.function.parameters meta.group punctuation.section.group.end */
@@ -1208,13 +1280,14 @@ FooBar::~FooBar
 
 ThisIsAReallyReallyLongClassNameThatRequiresWrappingCodeInTheMiddleOfAPath::
     ThisIsAReallyReallyLongClassNameThatRequiresWrappingCodeInTheMiddleOfAPath()
-/* <- entity.name.function */
+/* <- meta.function meta.toc-list.full-identifier */
     : var_name(nullptr) {
 }
 
 bool FooBar::operator==() {}
 /*   ^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
-/*   ^^^^^^^^^^^^^^^^^^ entity.name.function */
+/*   ^^^^^^^^^^^^^^^^^^ meta.toc-list.full-identifier */
+/*           ^^^^^^^^^^ entity.name.function */
 /*                     ^^ meta.function.parameters meta.group */
 /*                     ^ punctuation.section.group.begin */
 /*                      ^ punctuation.section.group.end */
@@ -1225,13 +1298,15 @@ bool FooBar::operator==() {}
 
 myns::FooBar::~FooBar() { }
 /*^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
+/*^^^^^^^^^^^^^^^^^^^ meta.toc-list.full-identifier */
 /*                   ^^ meta.function.parameters meta.group */
 /*                   ^ punctuation.section.group.begin */
 /*                    ^ punctuation.section.group.end */
 /*                      ^^^ meta.block */
 /*                      ^ punctuation.section.block.begin */
 /*                        ^ punctuation.section.block.end */
-/*^^^^^^^^^^^^^^^^^^^ entity.name.function */
+/*^^^^^^^^^^^^^^^^^^^ meta.toc-list.full-identifier */
+/*            ^^^^^^^ entity.name.function */
 
     extern "C" void test_in_extern_c_block()
 /*                  ^^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
@@ -1323,6 +1398,18 @@ using namespace NAME __attribute__((visibility ("hidden")));
 /*    ^ keyword.control */
 /*                   ^ storage.modifier */
 /*                                               ^ string */
+
+void func() {
+    using namespace NAME __attribute__((visibility ("hidden")));
+/*  ^ keyword.control */
+/*        ^ keyword.control */
+/*                       ^ storage.modifier */
+/*                                                   ^ string */
+}
+
+using namespace 
+/* <- keyword.control */
+/*    ^ keyword.control */
 
 using namespace myNameSpace;
 /* <- keyword.control */
@@ -1672,9 +1759,9 @@ private:
     friend int func(int a, int b) {
 /*  ^ storage.modifier */
 /*         ^ storage.type */
-/*             ^ - entity.name.function */
+/*             ^ entity.name.function */
 /*             ^ - meta.function-call */
-/*                                ^ meta.class meta.block meta.block punctuation.section.block.begin */
+/*                                ^ meta.class meta.block meta.method meta.block punctuation.section.block.begin */
         int a = 1;
     }
 /*  ^ meta.class meta.block meta.block punctuation.section.block.end */
@@ -1685,6 +1772,13 @@ private:
 /*         ^ storage.type
 /*               ^^ punctuation.accessor */
 /*                 ^ - entity */
+
+    friend bool operator != (const X& lhs, const X& rhs) {
+    /*          ^^^^^^^^^^^ entity.name.function */
+        int a = 1;
+    }
+/*  ^ meta.class meta.block meta.block punctuation.section.block.end */
+/*   ^ - meta.class meta.block meta.block */
 
     #if 0
     /*  ^ constant.numeric */
@@ -1783,7 +1877,7 @@ public:
                                  /* ^ meta.method.constructor.initializer-list   */
                                  /*   ^ - meta.function-call - variable.function */
 private:
-    int var1, var2, var3, var4;    
+    int var1, var2, var3, var4;
 };
 
 class X {
@@ -1977,6 +2071,60 @@ template <class T> class Sample {
      return T;
   }
 };
+
+class Namespace::MyClass MACRO1 MACRO2 : public SuperClass
+/*               ^^^^^^^ entity.name.class */
+/*             ^^ punctuation.accessor */
+/*                       ^ - entity.name */
+{
+};
+
+struct Namespace::MyStruct
+/*                ^^^^^^^^ entity.name.struct */
+/*              ^^ punctuation.accessor */
+{
+};
+
+union Namespace::MyUnion
+/*               ^^^^^^^ entity.name.union */
+/*             ^^ punctuation.accessor */
+{
+};
+
+enum class Namespace::MyEnum
+/*                    ^^^^^^ entity.name.enum */
+/*                  ^^ punctuation.accessor */
+{
+};
+
+class Namespace::
+MyClass MACRO1 
+/* <- entity.name.class */
+/*      ^ - entity.name */
+{
+};
+
+struct Namespace::
+MyStruct MACRO1
+/* <- entity.name.struct */
+/*       ^ - entity.name */
+{
+};
+
+union Namespace::
+MyUnion MACRO1
+/* <- entity.name.union */
+/*      ^ - entity.name */
+{
+};
+
+enum class Namespace::
+MyEnum MACRO1
+/* <- entity.name.enum */
+/*     ^ - entity.name */
+{
+};
+
 
 /////////////////////////////////////////////
 // Test preprocessor branching and C blocks
@@ -2268,7 +2416,7 @@ void sayHi()
     );
 
     if (::std::foo()) {}
-/*      ^^^^^^^^^^ variable.function */
+/*             ^^^ variable.function */
 /*      ^^ punctuation.accessor */
 /*           ^^ punctuation.accessor */
 
@@ -2294,10 +2442,32 @@ void sayHi()
 /*          ^ punctuation.section.generic.end */
 /*           ^^ meta.group */
 
+    ::myns::foo<int>();
+/*  ^^ punctuation.accessor.double-colon */
+/*        ^^ punctuation.accessor.double-colon */
+/*  ^^^^^^^^^^^^^^^^^^ meta.function-call */
+/*          ^^^ variable.function */
+/*              ^^^ storage.type */
+
+    myns::FooClass{42};
+/*      ^^ punctuation.accessor.double-colon */
+/*  ^^^^^^^^^^^^^^^^^^ meta.function-call */
+/*        ^^^^^^^^ variable.function */
+
+    ::myns::BarClass<int>{};
+/*  ^^ punctuation.accessor.double-colon */
+/*        ^^ punctuation.accessor.double-colon */
+/*  ^^^^^^^^^^^^^^^^^^^^^ meta.function-call */
+/*          ^^^^^^^^ variable.function */
+/*                   ^^^ storage.type */
+
     int a[5];
 /*       ^^^ meta.brackets */
 /*       ^ punctuation.section.brackets.begin */
 /*         ^ punctuation.section.brackets.end */
+
+    std::cout << ">> Hi!\n";
+/*            ^^ keyword.operator.arithmetic.c */
 }
 
 /////////////////////////////////////////////
@@ -2329,3 +2499,7 @@ void sayHi()
 /*      ^ punctuation.definition.string.begin */
 /*       ^^^^^^^^ string.quoted.other.lt-gt.include */
 /*               ^ punctuation.definition.string.end */
+
+/**
+      *
+/*    ^ comment.block.c punctuation.definition.comment.c */

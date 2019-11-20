@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>log</string>
+	</array>
+	<key>name</key>
+	<string>syslog</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>match</key>
+			<string>\b(WAR|WARNING)\b</string>
+			<key>name</key>
+			<string>invalid.deprecated</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>(^(INVITE|ACK|PUBLISH|OPTIONS|CANCEL|BYE|SUBSCRIBE|NOTIFY|INFO|REFER|UPDATE|MESSAGE) sip.+$|SIP/2.0 180 Ringing|SIP/2.0 200 OK)</string>
+			<key>name</key>
+			<string>variable.parameter</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>-----\&gt;step.+$</string>
+			<key>name</key>
+			<string>support.function</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>.+\*{3,}.+</string>
+			<key>name</key>
+			<string>comment</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b(INFO|VERBOSE)\b</string>
+			<key>name</key>
+			<string>comment</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\bNOTICE\b</string>
+			<key>name</key>
+			<string>support.class</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b(ERR|ERROR)\b</string>
+			<key>name</key>
+			<string>invalid.illegal</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^\s*\[.+?\]</string>
+			<key>name</key>
+			<string>string.quote.single</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>(---&gt;|&lt;---)( SIP read from | Transmitting \(NAT\) to | SIP transmit to).+$</string>
+			<key>name</key>
+			<string>comment.line</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\&lt;— SIP read from .+ —\&gt;</string>
+			<key>name</key>
+			<string>constant.character</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\&lt;— Transmitting \(NAT\) .+ —\&gt;</string>
+			<key>name</key>
+			<string>constant.numeric</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>(SEND\:|recv\:).+\&gt;</string>
+			<key>name</key>
+			<string>constant.numeric</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^Call-ID\:.+$</string>
+			<key>name</key>
+			<string>constant.numeric</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^(User-Agent|Server)\:.+$</string>
+			<key>name</key>
+			<string>entity.name.function</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>(AMI Send\:|AMI Recv\:|m\=).+</string>
+			<key>name</key>
+			<string>constant.language</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>.*&lt;conference-info.+</string>
+			<key>name</key>
+			<string>constant.o</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.syslog</string>
+	<key>uuid</key>
+	<string>25d8a3ff-0b8b-453b-a01e-e3de47162536</string>
+</dict>
+</plist>

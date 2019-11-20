@@ -1,4 +1,4 @@
-# SYNTAX TEST "Packages/sublime_toml_highlighting/TOML.sublime-syntax"
+# SYNTAX TEST "Packages/TOML/TOML.sublime-syntax"
 
 # This is a TOML document. Boom.
 # <- comment.line.number-sign punctuation.definition.comment
@@ -425,6 +425,10 @@ a = 5e+22
 #   ^^^^^ constant.numeric.float
 a = 1e6
 #   ^^^ constant.numeric.float
+a = 1e06
+#   ^^^^ constant.numeric.float
+a = 1e+06
+#   ^^^^^ constant.numeric.float
 a = -2E-2
 #   ^ keyword.operator.arithmetic
 #   ^^^^^ constant.numeric.float
@@ -521,6 +525,8 @@ ldt1s = 1979-05-27 07:32:00
 #       ^^^^^^^^^^^^^^^^^^^ constant.other.datetime
 ldt2s = 1979-05-27 00:32:00.999999
 #       ^^^^^^^^^^^^^^^^^^^^^^^^^^ constant.other.datetime
+lowercase = 1997-09-09t09:09:09z
+#           ^^^^^^^^^^^^^^^^^^^^ constant.other.datetime
 
 #-----------------------------------------------------------------------------
 # Invalid Date-Time

@@ -1,0 +1,46 @@
+[
+    {
+        "command": "csv_sort_by_col_asc",
+        "caption": "CSV: Sort by column (Ascending)"
+    },
+    {
+        "command": "csv_sort_by_col_desc",
+        "caption": "CSV: Sort by column (Descending)"
+    },
+    {
+        "command": "csv_insert_col",
+        "caption": "CSV: Insert column"
+    },
+    {
+        "command": "csv_delete_col",
+        "caption": "CSV: Delete column"
+    },
+    {
+        "command": "csv_select_col",
+        "caption": "CSV: Select column"
+    },
+    {
+        "command": "csv_format_expand",
+        "caption": "CSV: Justify columns"
+    },
+    {
+        "command": "csv_format_compact",
+        "caption": "CSV: Compact columns"
+    },
+    {
+        "command": "csv_delete_trailing_cols",
+        "caption": "CSV: Delete empty trailing columns"
+    },
+    {
+        "command": "csv_set_delimiter",
+        "caption": "CSV: Set delimiter"
+    },
+    {
+        "command": "csv_evaluate",
+        "caption": "CSV: Evaluate cells"
+    },
+    {
+        "command": "csv_format",
+        "caption": "CSV: Format using template"
+    }
+]
